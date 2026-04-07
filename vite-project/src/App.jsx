@@ -1,15 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Section } from "./Components/Section";
 import { FeedbackOptions } from "./Components/FeedbackOption";
 import { Notification } from "./Components/Notification";
 import { Statistics } from "./Components/Statistics";
 
 export function App() {
-  const [feedback, setFeedback] = useState({
-    good: 0,
-    neutral: 0,
-    bad: 0,
+  const [feedback, setFeedback] = useState(() => {
+    const savedFeedback = window.localStorage.getItem("feedback-data");
+    return savedFeedback !== null 
+      ? JSON.parse(savedFeedback) 
+      : { good: 0, neutral: 0, bad: 0 };
   });
+
+  useEffect(() => {
+    window.localStorage.setItem("feedback-data", JSON.stringify(feedback));
+  }, [feedback]);
 
   const handleFeedback = (type) => {
     setFeedback((prevState) => ({
@@ -29,7 +34,7 @@ export function App() {
   };
 
   const totalFeedback = countTotalFeedback();
-  const options = ["good", "neutral", "bad"];
+  const options = Object.keys(feedback);
 
   return (
     <div style={{ padding: "20px" }}>

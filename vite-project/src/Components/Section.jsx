@@ -4,4 +4,3 @@ export const Section = ({ title, children }) => (
     {children}
   </section>
 );
-
